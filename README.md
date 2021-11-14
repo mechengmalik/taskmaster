@@ -11,7 +11,7 @@ version: 1.0.0
 ## here are some screens of the application
 
 ### the home page of the application:
-![image description](screenshot/screenshot_Screenshot_20211114_170343_com.jpg)
+<img src="Screenshot_20211114_170343_com.example.taskmaster.jpg" height="400" alt="Screenshot"/>
 
 
 
