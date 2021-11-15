@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Task_Detail">
+
+    <TextView
+        android:id="@+id/mainTaskTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.091" />
+
+    <TextView
+        android:id="@+id/taskView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In fermentum ante at libero vulputate, sed volutpat dui facilisis. Sed vitae purus bibendum, placerat urna varius, malesuada magna. Sed egestas nunc ante, at pulvinar tortor finibus eu. Nunc consequat viverra tellus, et viverra ipsum mollis sit amet. Aenean egestas, sem at semper efficitur, neque nibh luctus nulla, et ultrices diam dui non erat. Maecenas turpis nunc, sodales non facilisis id, tristique nec urna. "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainTaskTitle" />
+</androidx.constraintlayout.widget.ConstraintLayout>
