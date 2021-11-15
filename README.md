@@ -19,8 +19,17 @@ version: 1.0.0
 ### the home page of the application:
 
 
+
 ![HomePage](screenshots/HomePage.png)
 
+
+
+<img src="Screenshot_20211114_170343_com.example.taskmaster.jpg" height="400" alt="Screenshot"/>
+
+
+
+### the add task page:
+<img src="Screenshot_20211114_170347_com.example.taskmaster.jpg" height="400" alt="Screenshot"/>
 
 
 ### the add task page:
