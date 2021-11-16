@@ -34,7 +34,7 @@
         android:id="@+id/addTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         android:text="Add Task"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,53 +50,27 @@
         android:text="All Task"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toEndOf="@+id/addTask" />
-
-    <Button
-        android:id="@+id/task1"
-        android:layout_width="217dp"
-        android:layout_height="48dp"
-        android:text="visit a Doctor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.06" />
-
-    <Button
-        android:id="@+id/task2"
-        android:layout_width="213dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:text="go to bank"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task1"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/task3"
-        android:layout_width="211dp"
-        android:layout_height="48dp"
-        android:text="pay the pells"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task2"
-        app:layout_constraintVertical_bias="0.093" />
 
     <Button
         android:id="@+id/sittingsButton"
         android:layout_width="112dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
         android:text="Settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/taskRecyclerView"
+        android:layout_width="406dp"
+        android:layout_height="280dp"
+        app:layout_constraintBottom_toTopOf="@+id/showTaskButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/task3"
-        app:layout_constraintVertical_bias="0.247" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
