@@ -14,35 +14,37 @@ version: 1.0.0
 + add a setting page which the user can change his username from there.
 
 
+
+
+#### lab28 changelog:
+add a recycle view with fragment and adapter(bind the data with view)
+ to show the tasks dynamically in home page.
+
+
+
 ## here are some screens of the application
+
+
+
 
 ### the home page of the application:
 
-
-
 ![HomePage](screenshots/HomePage.png)
 
+### the home page of the application with RecyclerView:
 
-
-<img src="Screenshot_20211114_170343_com.example.taskmaster.jpg" height="400" alt="Screenshot"/>
-
-
-
-### the add task page:
-<img src="Screenshot_20211114_170347_com.example.taskmaster.jpg" height="400" alt="Screenshot"/>
-
+![HomePage](screenshots/recyclerView.png)
 
 ### the add task page:
 ![addTask](screenshots/addTask-page.png)
 
-
 ### the all tasks page:
 ![allTask](screenshots/allTask-page.png)
-
 
 ### the details page:
 ![details](screenshots/taskDetail-page.png)
 
-
 ### the settings page:
 ![setting](screenshots/settingsPage.png)
+
+
