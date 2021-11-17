@@ -34,7 +34,7 @@
         android:id="@+id/addTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginBottom="16dp"
         android:text="Add Task"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,19 +50,20 @@
         android:text="All Task"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.086"
+        app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toEndOf="@+id/addTask" />
 
     <Button
         android:id="@+id/sittingsButton"
         android:layout_width="112dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
         android:text="Settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.839"
+        app:layout_constraintStart_toEndOf="@+id/userNameTask"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.084" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"

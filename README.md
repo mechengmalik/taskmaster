@@ -21,6 +21,11 @@ add a recycle view with fragment and adapter(bind the data with view)
  to show the tasks dynamically in home page.
 
 
+#### lab29 changelog:
+ *  a data base added, the data now is stored in the database.
+ * added a click functionality on the tasks on main page to navigate you to task details page.
+ * when adding a new task from add task page the task will be stored in the data base.
+
 
 ## here are some screens of the application
 
@@ -34,6 +39,10 @@ add a recycle view with fragment and adapter(bind the data with view)
 ### the home page of the application with RecyclerView:
 
 ![HomePage](screenshots/recyclerView.png)
+
+### the home page of the application with RecyclerView showing the data from database:
+
+![HomePage](screenshots/database.png)
 
 ### the add task page:
 ![addTask](screenshots/addTask-page.png)

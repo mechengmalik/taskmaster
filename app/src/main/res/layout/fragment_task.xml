@@ -17,10 +17,10 @@
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.087"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.139" />
+            app:layout_constraintVertical_bias="0.146" />
 
         <TextView
             android:id="@+id/bodyInFregment"
@@ -29,10 +29,10 @@
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.135"
+            app:layout_constraintHorizontal_bias="0.219"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleInFregment"
-            app:layout_constraintVertical_bias="0.282" />
+            app:layout_constraintVertical_bias="0.31" />
 
         <EditText
             android:id="@+id/stateInFregment"
@@ -43,10 +43,10 @@
             android:text="Name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.116"
+            app:layout_constraintHorizontal_bias="0.186"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bodyInFregment"
-            app:layout_constraintVertical_bias="0.325" />
+            app:layout_constraintVertical_bias="0.311" />
 
         <Button
             android:id="@+id/taskFragmentButton"
@@ -55,9 +55,9 @@
             android:text="Button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.767"
+            app:layout_constraintHorizontal_bias="0.403"
             app:layout_constraintStart_toEndOf="@+id/stateInFregment"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.846" />
+            app:layout_constraintVertical_bias="0.842" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
