@@ -3,6 +3,7 @@ package com.example.taskmaster;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +25,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        List<Task> allTasksData = new ArrayList<>();
-        allTasksData.add(new Task("visiting a doctor","general routine examination","complete"));
-        allTasksData.add(new Task("go to bank","make a new account for bills","new"));
-        allTasksData.add(new Task("pay the bills","Pay monthly bills","in progress"));
+//        List<Task> allTasksData = new ArrayList<>();
+//        allTasksData.add(new Task("visiting a doctor","general routine examination","complete"));
+//        allTasksData.add(new Task("go to bank","make a new account for bills","new"));
+//        allTasksData.add(new Task("pay the bills","Pay monthly bills","in progress"));
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"tasks").allowMainThreadQueries().build();
+        TaskDao userDao = db.taskDao();
+
+        List<Task> allTasksData = userDao.getAll();
+
+
 
         RecyclerView allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
         allTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
