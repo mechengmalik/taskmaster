@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +44,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         Button taskButton = holder.itemView.findViewById(R.id.taskFragmentButton);
 
-        taskButton.setText(holder.task.title);
+        taskButton.setText(holder.task.getTitle());
 
         TextView taskTitle  = holder.itemView.findViewById(R.id.titleInFregment);
-        taskTitle.setText(holder.task.title);
+        taskTitle.setText(holder.task.getTitle());
 
         TextView taskBody  = holder.itemView.findViewById(R.id.bodyInFregment);
-        taskBody.setText(holder.task.body);
+        taskBody.setText(holder.task.getBody());
 
         TextView taskState  = holder.itemView.findViewById(R.id.stateInFregment);
-        taskState.setText(holder.task.state);
+        taskState.setText(holder.task.getState());
 
         String goToTaskDetail = taskTitle.getText().toString();
 
