@@ -9,11 +9,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplifyframework.api.graphql.model.ModelMutation;
+import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Task;
+import com.amplifyframework.datastore.generated.model.Team;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddTask extends AppCompatActivity {
 
@@ -41,6 +48,24 @@ public class AddTask extends AppCompatActivity {
     protected  void onStart() {
 
         super.onStart();
+
+
+        List<Team> teams = new ArrayList<>();
+
+        Amplify.API.query(
+                ModelQuery.list(Team.class),
+                response -> {
+                    for (Team task : response.getData()) {
+                        Log.i("MyAmplifyApp", task.getName());
+                        teams.add(task);
+
+                    }
+                },
+                error -> Log.e("MyAmplifyApp", "Query failure", error)
+        );
+
+
+
 //        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"tasks").allowMainThreadQueries().build();
 //        TaskDao taskDao = db.taskDao();
         Button addTask = findViewById(R.id.addButton);
@@ -52,23 +77,48 @@ public class AddTask extends AppCompatActivity {
                 EditText taskBody = findViewById(R.id.taskInput);
                 EditText taskState = findViewById(R.id.taskState);
 
-                Task item = Task.builder()
+                RadioButton course = findViewById(R.id.course);
+                RadioButton home = findViewById(R.id.homee);
+                RadioButton work = findViewById(R.id.work);
+
+                String teamName ="";
+                if (course.isChecked()){
+
+                    teamName ="course";
+
+                }else if (home.isChecked()){
+                    teamName= "home";
+                }else if (work.isChecked()){
+                    teamName= "work";
+                }
+
+                Team team = null;
+
+                for (int i = 0; i<teams.size(); i++){
+                    if (teams.get(i).getName().equals(teamName)){
+                        team= teams.get(i);
+                    }
+                }
+
+                Task task = Task.builder()
                         .title(taskTitle.getText().toString())
                         .body(taskBody.getText().toString())
                         .state(taskState.getText().toString())
+                        .team(team)
                         .build();
-                Amplify.DataStore.save(
-                        item,
-                        success -> Log.i("Amplify", "Saved item: " + success.item().getId()),
-                        error -> Log.e("Amplify", "Could not save item to DataStore", error)
-                );
+
+                Amplify.API.mutate(
+                        ModelMutation.create(task),
+                        response -> Log.i("MyAmplifyApp", "Added Todo with id: " + response.getData().getId()),
+                        error -> Log.e("MyAmplifyApp", "Create failed", error));
+
+
 
                 Intent toHome = new Intent(AddTask.this,MainActivity.class);
                 startActivity(toHome);
 
             }
         });
-
 
     }
 }
