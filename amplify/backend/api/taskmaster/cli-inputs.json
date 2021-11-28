@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 7
+    },
+    "conflictResolution": {
+      "defaultResolutionStrategy": {
+        "type": "AUTOMERGE"
+      }
+    },
+    "apiName": "taskmaster",
+    "gqlSchemaPath": "/mnt/c/Users/STUDENT/AndroidStudioProjects/TaskMaster/amplify/backend/api/taskmaster/schema.graphql"
+  }
+}
