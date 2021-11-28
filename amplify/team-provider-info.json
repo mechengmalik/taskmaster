@@ -23,6 +23,11 @@
       "StackName": "amplify-taskmaster-malik-203451",
       "StackId": "arn:aws:cloudformation:us-east-1:034892735905:stack/amplify-taskmaster-malik-203451/b8657ce0-4fb0-11ec-9a88-0e8e435ea793",
       "AmplifyAppId": "d3k0ozubyrmfop"
+    },
+    "categories": {
+      "auth": {
+        "taskmaster653568d4": {}
+      }
     }
   }
 }

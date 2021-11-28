@@ -104,12 +104,12 @@ public class AddTask extends AppCompatActivity {
                         .title(taskTitle.getText().toString())
                         .body(taskBody.getText().toString())
                         .state(taskState.getText().toString())
-                        .team(team)
+                        .teamId(team.getId())
                         .build();
 
                 Amplify.API.mutate(
                         ModelMutation.create(task),
-                        response -> Log.i("MyAmplifyApp", "Added Todo with id: " + response.getData().getId()),
+                        response -> Log.i("lateeeeh", "Added Task with id: " + response.getData().getTeamId()),
                         error -> Log.e("MyAmplifyApp", "Create failed", error));
 
 

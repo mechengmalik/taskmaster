@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.amplifyframework.AmplifyException;
 import com.amplifyframework.api.aws.AWSApiPlugin;
 import com.amplifyframework.api.graphql.model.ModelQuery;
+import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
@@ -32,23 +34,88 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    List<Task> tasks = new ArrayList<>();
+    TaskAdapter adapter = new TaskAdapter(tasks);
+    Handler handler = new Handler();
+
+    Runnable runnable = new Runnable() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void run() {
+            adapter.notifyDataSetChanged();
+        }
+    };
+//
+//    public void login(){
+//        Amplify.Auth.signInWithWebUI(
+//                this,
+//                result -> Log.i("AuthQuickStart", result.toString()),
+//                error -> Log.e("AuthQuickStart", error.toString())
+//        );
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
         try {
-
             Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.addPlugin(new AWSCognitoAuthPlugin());
             Amplify.addPlugin(new AWSDataStorePlugin());
             Amplify.configure(getApplicationContext());
             Log.i("Tutorial", "Initialized Amplify");
         } catch (AmplifyException failure) {
             Log.e("Tutorial", "Could not initialize Amplify", failure);
         }
+        Amplify.DataStore.observe(Task.class,
+                started -> Log.i("Tutorial", "Observation began."),
+                change -> Log.i("Tutorial", change.item().toString()),
+                failure -> Log.e("Tutorial", "Observation failed.", failure),
+                () -> Log.i("Tutorial", "Observation complete.")
+        );
+        Amplify.DataStore.observe(Team.class,
+                started -> Log.i("Tutorial", "Observation began."),
+                change -> Log.i("Tutorial", change.item().toString()),
+                failure -> Log.e("Tutorial", "Observation failed.", failure),
+                () -> Log.i("Tutorial", "Observation complete.")
+        );
+
+
+
+
+
+
+
+//        login();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        String userName = sharedPreferences.getString("userName","user");
+
+//        Toast.makeText(this, userName,Toast.LENGTH_LONG).show();
+        TextView userNameField = findViewById(R.id.userNameTask);
+
+
+
+        userNameField.setText(com.amazonaws.mobile.client.AWSMobileClient.getInstance().getUsername() + "'s Tasks");
+
+
+        Button logoutButton =  findViewById(R.id.signout);
+//        logoutButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Amplify.Auth.signOut(
+//                        () -> {
+//                            login();
+//                            Log.i("AuthQuickstart", "Signed out successfully");
+//                        },
+//                        error -> Log.e("AuthQuickstart", error.toString())
+//                );
+//            }
+//        });
+
+
+
 
 
         Button addTask = findViewById(R.id.addTask);
@@ -103,55 +170,91 @@ public class MainActivity extends AppCompatActivity {
 //        TaskDao userDao = db.taskDao();
 //
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String team = sharedPreferences.getString("team", "team");
 
 
-        RecyclerView allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
+//        RecyclerView allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
+//        allTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        allTaskRecyclerView.setAdapter(new TaskAdapter(allTasksData));
 
-        List<Task> allTasksData =new ArrayList<>();
+//        List<Task> allTasksData =new ArrayList<>();
         List<Team> teamsList =new ArrayList<>();
 
 
 
-        Handler handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(@NonNull Message msg) {
-                allTaskRecyclerView.getAdapter().notifyDataSetChanged();
-                return false;
-            }
-        });
+//        Handler handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(@NonNull Message msg) {
+//                allTaskRecyclerView.getAdapter().notifyDataSetChanged();
+//                return false;
+//            }
+//        });
 
-        allTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        allTaskRecyclerView.setAdapter(new TaskAdapter(allTasksData));
+        RecyclerView recyclerView = findViewById(R.id.taskRecyclerView);
+        recyclerView.setAdapter(adapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
 
 
-//
-        Amplify.API.query(
-                ModelQuery.list(Team.class),
-                response -> {
-                    for (Team teamName : response.getData()) {
-                        Log.i("MyAmplifyApp", teamName.getName());
-                        Log.i("MyAmplifyApp", teamName.getId());
 
-                        ///add new team
-                        teamsList.add(teamName);
+
+        Amplify.DataStore.query(
+                Team.class,Team.NAME.contains(team),
+                items -> {
+                    while (items.hasNext()) {
+                        Team item = items.next();
+
+                        Amplify.DataStore.query(
+                                Task.class,Task.TEAM_ID.eq( item.getId()),
+                                itemss -> {
+                                    tasks.clear();
+                                    while (itemss.hasNext()) {
+                                        Task item1 = itemss.next();
+                                        tasks.add(item1);
+                                        Log.i("DUCK", "list " + item1.getTeamId());
+
+                                    }
+                                    handler.post(runnable);
+                                },
+                                failure -> Log.e("Amplify", "Could not query DataStore", failure)
+                        );
+                        Log.i("Amplify", "Id " + item.getId());
                     }
-                    for (int i = 0; i < teamsList.size(); i++) {
-                        if (teamsList.get(i).getName().equals(team)){
-
-
-                            allTasksData.addAll(teamsList.get(i).getTasks());
-                            break;
-                        }
-                    }
-
-                    handler.sendEmptyMessage(1);
-                    Log.i("MyAmplifyApp", "outside the loop");
+                    handler.post(runnable);
                 },
-                error -> Log.e("MyAmplifyApp", "Query failure", error)
+                failure -> Log.e("Amplify", "Could not query DataStore", failure)
         );
+
+
+//--------------------------------------------------------------------------------
+
+//        Amplify.API.query(
+//                ModelQuery.list(Team.class),
+//                response -> {
+//                    for (Team teamName : response.getData()) {
+//                        Log.i("MyAmplifyApp", teamName.getName());
+//                        Log.i("MyAmplifyApp", teamName.getId());
+//                        handler.sendEmptyMessage(1);
+//                        ///add new team
+//                        teamsList.add(teamName);
+//                    }
+//                    for (int i = 0; i < teamsList.size(); i++) {
+//                        if (teamsList.get(i).getName().equals(team)){
+//
+//
+//                            allTasksData.addAll(teamsList.get(i).getTasks());
+//                            break;
+//                        }
+//                    }
+//
+//                    handler.sendEmptyMessage(1);
+//                    Log.i("MyAmplifyApp", "outside the loop");
+//                },
+//                error -> Log.e("MyAmplifyApp", "Query failure", error)
+//        );
 
 
 
@@ -206,19 +309,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String userName = sharedPreferences.getString("userName","user");
         String teamName = sharedPreferences.getString("team","team");
-
-
-        Toast.makeText(this, userName,Toast.LENGTH_LONG).show();
-
-        TextView userNameField = findViewById(R.id.userNameTask);
-
 
         TextView teamNameField = findViewById(R.id.teamNameTask);
 
-        String tasks = "'s Tasks";
-        userNameField.setText(userName + " Task`s");
+
         teamNameField.setText(teamName);
 
 
