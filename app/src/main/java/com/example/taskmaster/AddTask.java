@@ -1,5 +1,6 @@
 package com.example.taskmaster;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
@@ -19,16 +20,19 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.Team;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddTask extends AppCompatActivity {
+    String imgName = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
-        TextView textView = findViewById(R.id.taskInput);
 
 //        Button button = findViewById(R.id.button1);
 //        button.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +46,9 @@ public class AddTask extends AppCompatActivity {
 //
 //            }
 //        });
+        TextView textView = findViewById(R.id.taskInput);
+
+
 
     }
     @Override
@@ -64,10 +71,20 @@ public class AddTask extends AppCompatActivity {
                 error -> Log.e("MyAmplifyApp", "Query failure", error)
         );
 
+        Button uploadImg = findViewById(R.id.uploadFile);
+        uploadImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fileChoose();
+            }
+        });
+
 
 
 //        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class,"tasks").allowMainThreadQueries().build();
 //        TaskDao taskDao = db.taskDao();
+
+
         Button addTask = findViewById(R.id.addButton);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,11 +117,14 @@ public class AddTask extends AppCompatActivity {
                     }
                 }
 
+                assert team != null;
+
                 Task task = Task.builder()
                         .title(taskTitle.getText().toString())
                         .body(taskBody.getText().toString())
                         .state(taskState.getText().toString())
                         .teamId(team.getId())
+                        .imgName(imgName)
                         .build();
 
                 Amplify.API.mutate(
@@ -117,8 +137,43 @@ public class AddTask extends AppCompatActivity {
                 Intent toHome = new Intent(AddTask.this,MainActivity.class);
                 startActivity(toHome);
 
+
             }
+
+
         });
 
+
     }
+    public void fileChoose(){
+        Intent fileChoose=new Intent(Intent.ACTION_GET_CONTENT);
+        fileChoose.setType("*/*");
+        fileChoose=Intent.createChooser(fileChoose,"choose file");
+        startActivityForResult(fileChoose,1111);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        try {
+            InputStream exampleInputStream = getContentResolver().openInputStream(data.getData());
+            System.out.println("hhhhhhhh"+data.getData().toString());
+
+            imgName = data.getData().toString();
+
+
+            Amplify.Storage.uploadInputStream(
+                    data.getData().toString(),
+                    exampleInputStream,
+                    result -> Log.i("MyAmplifyApp", "Successfully uploaded: " + result.getKey()),
+                    storageFailure -> Log.e("MyAmplifyApp", "Upload failed", storageFailure)
+            );
+        }  catch (FileNotFoundException error) {
+            Log.e("MyAmplifyApp", "Could not find file to open for input stream.", error);
+        }
+    }
+
 }

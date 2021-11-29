@@ -27,12 +27,15 @@ import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.AWSDataStorePlugin;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.Team;
+import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import static com.amazonaws.mobile.client.internal.oauth2.OAuth2Client.TAG;
+
 
 public class MainActivity extends AppCompatActivity {
-
+    // sign in
     public void login(){
         Amplify.Auth.signInWithWebUI(
                 this,
@@ -51,28 +54,28 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-            Amplify.addPlugin(new AWSCognitoAuthPlugin());
-
+            Amplify.addPlugin(new AWSS3StoragePlugin());
             Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.addPlugin(new AWSCognitoAuthPlugin());
             Amplify.configure(getApplicationContext());
-            Log.i("Tutorial", "Initialized Amplify");
+
+            Log.i("MyAmplifyApp", "Initialized Amplify");
+
         } catch (AmplifyException failure) {
-            Log.e("Tutorial", "Could not initialize Amplify", failure);
+            Log.e("MyAmplifyApp", "Could not initialize Amplify", failure);
         }
 
         login();
 
+        //----------to take the userName from AWS Auth----------
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String userName = sharedPreferences.getString("userName","user");
+//        String userName = sharedPreferences.getString("userName","user");
 
 //        Toast.makeText(this, userName,Toast.LENGTH_LONG).show();
         TextView userNameField = findViewById(R.id.userNameTask);
-
-
-
         userNameField.setText(com.amazonaws.mobile.client.AWSMobileClient.getInstance().getUsername() + "'s Tasks");
 
-
+        //--logout button----
         Button logoutButton =  findViewById(R.id.signout);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //------to add a task--------
         Button addTask = findViewById(R.id.addTask);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //------show all task button-------
         Button showTask = findViewById(R.id.showTaskButton);
         showTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //----------setting button--------
         Button sittings = findViewById(R.id.sittingsButton);
         sittings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //-------checks the task query ---------//
 //        Amplify.DataStore.observe(Task.class,
 //                started -> Log.i("Tutorial", "Observation began."),
 //                change -> Log.i("Tutorial", change.item().toString()),
@@ -134,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
 //        );
 
 
+        //----------hardCoded task---------//
 //        List<Task> allTasksData = new ArrayList<>();
 //        allTasksData.add(new Task("visiting a doctor","general routine examination","complete"));
 //        allTasksData.add(new Task("go to bank","make a new account for bills","new"));
@@ -143,16 +147,17 @@ public class MainActivity extends AppCompatActivity {
 //        TaskDao userDao = db.taskDao();
 //
 
-        String team = sharedPreferences.getString("team", "team");
+
 
 
         RecyclerView allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
+        String team = sharedPreferences.getString("team","team");
 
         List<Task> allTasksData =new ArrayList<>();
         List<Team> teamsList =new ArrayList<>();
 
 
-
+            //---------to handle the threads with data change --------------
         Handler handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
@@ -166,16 +171,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//
+        //---------fetch the data -------------
         Amplify.API.query(
                 ModelQuery.list(Team.class),
                 response -> {
                     for (Team teamName : response.getData()) {
                         Log.i("MyAmplifyApp", teamName.getName());
                         Log.i("MyAmplifyApp", teamName.getId());
-                        handler.sendEmptyMessage(1);
                         ///add new team
                         teamsList.add(teamName);
+                        Log.i("MyAmplifyApp", teamsList.toString());
                     }
                     for (int i = 0; i < teamsList.size(); i++) {
                         if (teamsList.get(i).getName().equals(team)){
@@ -242,8 +247,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
         String teamName = sharedPreferences.getString("team","team");
 

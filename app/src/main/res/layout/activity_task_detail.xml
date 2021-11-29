@@ -8,24 +8,50 @@
 
     <TextView
         android:id="@+id/mainTaskTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="136dp"
+        android:layout_height="38dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.145"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.091" />
+        app:layout_constraintVertical_bias="0.393" />
 
     <TextView
-        android:id="@+id/taskView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. In fermentum ante at libero vulputate, sed volutpat dui facilisis. Sed vitae purus bibendum, placerat urna varius, malesuada magna. Sed egestas nunc ante, at pulvinar tortor finibus eu. Nunc consequat viverra tellus, et viverra ipsum mollis sit amet. Aenean egestas, sem at semper efficitur, neque nibh luctus nulla, et ultrices diam dui non erat. Maecenas turpis nunc, sodales non facilisis id, tristique nec urna. "
+        android:id="@+id/stateView"
+        android:layout_width="134dp"
+        android:layout_height="40dp"
+        android:text="status"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.909"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainTaskTitle" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.393" />
+
+    <TextView
+        android:id="@+id/bodyView"
+        android:layout_width="313dp"
+        android:layout_height="63dp"
+        android:text="description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.591"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.618" />
+
+    <ImageView
+        android:id="@+id/TaskImgView"
+        android:layout_width="238dp"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toTopOf="@+id/bodyView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.069"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

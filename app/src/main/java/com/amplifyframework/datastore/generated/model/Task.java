@@ -30,11 +30,13 @@ public final class Task implements Model {
   public static final QueryField BODY = field("body");
   public static final QueryField STATE = field("state");
   public static final QueryField TEAM_ID = field("teamID");
+  public static final QueryField IMG_NAME = field("imgName");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String title;
   private final @ModelField(targetType="String") String body;
   private final @ModelField(targetType="String") String state;
   private final @ModelField(targetType="ID") String teamID;
+  private final @ModelField(targetType="String") String imgName;
   public String getId() {
       return id;
   }
@@ -55,12 +57,17 @@ public final class Task implements Model {
       return teamID;
   }
   
-  private Task(String id, String title, String body, String state, String teamID) {
+  public String getImgName() {
+      return imgName;
+  }
+  
+  private Task(String id, String title, String body, String state, String teamID, String imgName) {
     this.id = id;
     this.title = title;
     this.body = body;
     this.state = state;
     this.teamID = teamID;
+    this.imgName = imgName;
   }
   
   @Override
@@ -75,7 +82,8 @@ public final class Task implements Model {
               ObjectsCompat.equals(getTitle(), task.getTitle()) &&
               ObjectsCompat.equals(getBody(), task.getBody()) &&
               ObjectsCompat.equals(getState(), task.getState()) &&
-              ObjectsCompat.equals(getTeamId(), task.getTeamId());
+              ObjectsCompat.equals(getTeamId(), task.getTeamId()) &&
+              ObjectsCompat.equals(getImgName(), task.getImgName());
       }
   }
   
@@ -87,6 +95,7 @@ public final class Task implements Model {
       .append(getBody())
       .append(getState())
       .append(getTeamId())
+      .append(getImgName())
       .toString()
       .hashCode();
   }
@@ -99,7 +108,8 @@ public final class Task implements Model {
       .append("title=" + String.valueOf(getTitle()) + ", ")
       .append("body=" + String.valueOf(getBody()) + ", ")
       .append("state=" + String.valueOf(getState()) + ", ")
-      .append("teamID=" + String.valueOf(getTeamId()))
+      .append("teamID=" + String.valueOf(getTeamId()) + ", ")
+      .append("imgName=" + String.valueOf(getImgName()))
       .append("}")
       .toString();
   }
@@ -132,6 +142,7 @@ public final class Task implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -141,7 +152,8 @@ public final class Task implements Model {
       title,
       body,
       state,
-      teamID);
+      teamID,
+      imgName);
   }
   public interface BuildStep {
     Task build();
@@ -150,6 +162,7 @@ public final class Task implements Model {
     BuildStep body(String body);
     BuildStep state(String state);
     BuildStep teamId(String teamId);
+    BuildStep imgName(String imgName);
   }
   
 
@@ -159,6 +172,7 @@ public final class Task implements Model {
     private String body;
     private String state;
     private String teamID;
+    private String imgName;
     @Override
      public Task build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -168,7 +182,8 @@ public final class Task implements Model {
           title,
           body,
           state,
-          teamID);
+          teamID,
+          imgName);
     }
     
     @Override
@@ -195,6 +210,12 @@ public final class Task implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep imgName(String imgName) {
+        this.imgName = imgName;
+        return this;
+    }
+    
     /** 
      * WARNING: Do not set ID when creating a new object. Leave this blank and one will be auto generated for you.
      * This should only be set when referring to an already existing object.
@@ -218,12 +239,13 @@ public final class Task implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String title, String body, String state, String teamId) {
+    private CopyOfBuilder(String id, String title, String body, String state, String teamId, String imgName) {
       super.id(id);
       super.title(title)
         .body(body)
         .state(state)
-        .teamId(teamId);
+        .teamId(teamId)
+        .imgName(imgName);
     }
     
     @Override
@@ -244,6 +266,11 @@ public final class Task implements Model {
     @Override
      public CopyOfBuilder teamId(String teamId) {
       return (CopyOfBuilder) super.teamId(teamId);
+    }
+    
+    @Override
+     public CopyOfBuilder imgName(String imgName) {
+      return (CopyOfBuilder) super.imgName(imgName);
     }
   }
   
