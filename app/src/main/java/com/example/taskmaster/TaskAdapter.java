@@ -56,12 +56,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         taskState.setText(holder.task.getState());
 
         String goToTaskDetail = taskTitle.getText().toString();
+        String goToTaskDetailState = taskState.getText().toString();
+        String goToTaskDetailBody = taskBody.getText().toString();
 
         taskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(),Task_Detail.class);
                 intent.putExtra("title", goToTaskDetail);
+                intent.putExtra("state", goToTaskDetailState);
+                intent.putExtra("body", goToTaskDetailBody);
                 v.getContext().startActivity(intent);
             }
         });

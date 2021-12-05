@@ -160,7 +160,7 @@ public class AddTask extends AppCompatActivity {
 
         try {
             InputStream exampleInputStream = getContentResolver().openInputStream(data.getData());
-            System.out.println("hhhhhhhh"+data.getData().toString());
+            System.out.println("myApp"+data.getData().toString());
 
             imgName = data.getData().toString();
 

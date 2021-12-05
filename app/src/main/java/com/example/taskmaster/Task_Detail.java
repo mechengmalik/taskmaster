@@ -24,11 +24,15 @@ public class Task_Detail extends AppCompatActivity {
         titleText.setText(title);
 
 
-        TextView state = findViewById(R.id.stateView);
-        state.setText(getIntent().getExtras().getString("body"));
+        TextView stateText = findViewById(R.id.stateView);
+        String state = getIntent().getExtras().get("state").toString();
+        stateText.setText(state);
 
-        TextView body = findViewById(R.id.bodyView);
-        body.setText(getIntent().getExtras().getString("state"));
+
+        TextView bodyText = findViewById(R.id.bodyView);
+        String body = getIntent().getExtras().get("body").toString();
+        bodyText.setText(body);
+
 
         Amplify.Storage.downloadFile(
                 getIntent().getExtras().getString("imgName"),

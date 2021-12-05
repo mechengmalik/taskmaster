@@ -35,6 +35,14 @@ import static com.amazonaws.mobile.client.internal.oauth2.OAuth2Client.TAG;
 
 
 public class MainActivity extends AppCompatActivity {
+//    Handler handler;
+    RecyclerView allTaskRecyclerView;
+    List<Task> allTasksData =new ArrayList<>();
+    List<Team> teamsList =new ArrayList<>();
+    List<Task> tasks = new ArrayList<>();
+
+    private String teamName;
+    private Team teamFilter;
     // sign in
     public void login(){
         Amplify.Auth.signInWithWebUI(
@@ -53,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         try {
-
-            Amplify.addPlugin(new AWSS3StoragePlugin());
             Amplify.addPlugin(new AWSApiPlugin());
+            Amplify.addPlugin(new AWSS3StoragePlugin());
+
             Amplify.addPlugin(new AWSCognitoAuthPlugin());
             Amplify.configure(getApplicationContext());
 
@@ -150,52 +158,27 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        RecyclerView allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
+        allTaskRecyclerView = findViewById(R.id.taskRecyclerView);
         String team = sharedPreferences.getString("team","team");
 
-        List<Task> allTasksData =new ArrayList<>();
-        List<Team> teamsList =new ArrayList<>();
+
+
 
 
             //---------to handle the threads with data change --------------
-        Handler handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
-            @Override
-            public boolean handleMessage(@NonNull Message msg) {
-                allTaskRecyclerView.getAdapter().notifyDataSetChanged();
-                return false;
-            }
-        });
+//        handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(@NonNull Message msg) {
+//                allTaskRecyclerView.getAdapter().notifyDataSetChanged();
+//                return false;
+//            }
+//        });
 
-        allTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        allTaskRecyclerView.setAdapter(new TaskAdapter(allTasksData));
+
 
 
 
         //---------fetch the data -------------
-        Amplify.API.query(
-                ModelQuery.list(Team.class),
-                response -> {
-                    for (Team teamName : response.getData()) {
-                        Log.i("MyAmplifyApp", teamName.getName());
-                        Log.i("MyAmplifyApp", teamName.getId());
-                        ///add new team
-                        teamsList.add(teamName);
-                        Log.i("MyAmplifyApp", teamsList.toString());
-                    }
-                    for (int i = 0; i < teamsList.size(); i++) {
-                        if (teamsList.get(i).getName().equals(team)){
-
-
-                            allTasksData.addAll(teamsList.get(i).getTasks());
-                            break;
-                        }
-                    }
-
-                    handler.sendEmptyMessage(1);
-                    Log.i("MyAmplifyApp", "outside the loop");
-                },
-                error -> Log.e("MyAmplifyApp", "Query failure", error)
-        );
 
 
 
@@ -247,18 +230,63 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
+        Handler handler;
+
+        handler =new Handler(Looper.getMainLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                allTaskRecyclerView.getAdapter().notifyDataSetChanged();
+                return false;
+            }
+        });
+
+
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        String teamName = sharedPreferences.getString("team","team");
+        String teamName = sharedPreferences.getString("team", "team");
 
+
+        this.teamName=teamName;
         TextView teamNameField = findViewById(R.id.teamNameTask);
 
 
         teamNameField.setText(teamName);
 
 
+        Amplify.API.query(
+                ModelQuery.list(Team.class,Team.NAME.contains(teamName)),
+                response -> {
+                    for (Team teamN : response.getData()) {
+//                        teamFilter = teamN;
+//                        teamsList.add(teamN);
+                        tasks = teamN.getTasks();
+                        Log.i("MyAmplifyApp", tasks.toString());
+
+//                        Log.i("MyAmplifyApp", tasks.getId());
+                        ///add new team
+//                        allTasksData.add(teamFilter.getTasks());
+//                        Log.i("MyAmplifyApp", teamsList.toString());
+                    }
+
+
+                    handler.sendEmptyMessage(1);
+                    Log.i("MyAmplifyApp", "outside the loop");
+
+                },
+                error -> Log.e("MyAmplifyApp", "Query failure", error)
+
+        );
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        allTaskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        tasks = teamsList.get(0).getTasks();
+
+        allTaskRecyclerView.setAdapter(new TaskAdapter(tasks));
 
 
 
