@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.171" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/TaskImgView"
         android:layout_width="315dp"
         android:layout_height="115dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +72,7 @@
         app:layout_constraintBottom_toTopOf="@+id/showTaskButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/TaskImgView" />
 
     <TextView
         android:id="@+id/teamNameTask"
