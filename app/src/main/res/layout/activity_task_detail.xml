@@ -54,4 +54,14 @@
         app:layout_constraintVertical_bias="0.069"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="275dp"
+        android:layout_height="30dp"
+        android:text="location"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bodyView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

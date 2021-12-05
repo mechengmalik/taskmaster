@@ -2,10 +2,18 @@ package com.example.taskmaster;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.room.Room;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,20 +27,32 @@ import com.amplifyframework.api.graphql.model.ModelQuery;
 import com.amplifyframework.core.Amplify;
 import com.amplifyframework.datastore.generated.model.Task;
 import com.amplifyframework.datastore.generated.model.Team;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AddTask extends AppCompatActivity {
+    // class level
+    private FusedLocationProviderClient fusedLocationClient;
     String imgName = "";
+    String loc;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_task);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 //        Button button = findViewById(R.id.button1);
 //        button.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +67,62 @@ public class AddTask extends AppCompatActivity {
 //            }
 //        });
         TextView textView = findViewById(R.id.taskInput);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if (location != null) {
+
+
+                            Geocoder geocoder;
+                            List<Address> addresses = new ArrayList<>();
+                            geocoder = new Geocoder(AddTask.this, Locale.getDefault());
+
+                            try {
+                                addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                            String city = addresses.get(0).getLocality();
+                            String state = addresses.get(0).getAdminArea();
+                            String  country = addresses.get(0).getCountryName();
+                            String postalCode = addresses.get(0).getPostalCode();
+                            String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                            loc = city + "- " + country;
+
+
+                            System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLL" + loc);
+
+                        }
+                    }
+                });
 
 
 
@@ -126,6 +202,11 @@ public class AddTask extends AppCompatActivity {
                         .teamId(team.getId())
                         .imgName(imgName)
                         .build();
+                String key =task.getId();
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AddTask.this);
+                sharedPreferences.edit().putString(key, loc).apply();
+
 
                 Amplify.API.mutate(
                         ModelMutation.create(task),
@@ -142,6 +223,7 @@ public class AddTask extends AppCompatActivity {
 
 
         });
+        System.out.println("GOOGLE GOOGLE "+   GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this));
 
 
     }
