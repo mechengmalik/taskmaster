@@ -2,8 +2,11 @@ package com.example.taskmaster;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,20 +21,25 @@ public class Task_Detail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_detail);
+        Intent intent = getIntent();
 
         TextView titleText = findViewById(R.id.mainTaskTitle);
-        String title = getIntent().getExtras().get("title").toString();
-        titleText.setText(title);
-
-
         TextView stateText = findViewById(R.id.stateView);
-        String state = getIntent().getExtras().get("state").toString();
-        stateText.setText(state);
-
-
         TextView bodyText = findViewById(R.id.bodyView);
-        String body = getIntent().getExtras().get("body").toString();
-        bodyText.setText(body);
+
+        titleText.setText(intent.getExtras().getString("title"));
+
+        stateText.setText(intent.getExtras().getString("state"));
+
+
+        bodyText.setText(intent.getExtras().getString("body"));
+
+        TextView location = findViewById(R.id.location);
+        String key = getIntent().getStringExtra("key");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Task_Detail.this);
+        String locationData = sharedPreferences.getString(key,"No Location Found");
+
+        location.setText(locationData);
 
 
         Amplify.Storage.downloadFile(
